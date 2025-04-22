@@ -3,7 +3,7 @@ import math
 
 
 
-class Game:
+class Quarto:
     def __init__(self, B, S, D, L, E, F, C, P):
         self.B = B #"Big"
         self.S = S #"Small"
