@@ -1,0 +1,23 @@
+{
+    "players": ["LUR", "FKY"],
+    "current": 0,
+    "board": [
+      null,
+      "BDEC",
+      null,
+      "SDFP",
+      null,
+      null,
+      null,
+      null,
+      null,
+      "SLFC",
+      null,
+      null,
+      "BLFP",
+      "BLEC",
+      null,
+      null
+    ],
+    "piece": "BLEP"
+  }
