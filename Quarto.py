@@ -9,7 +9,7 @@ class Game:
         s.bind(("127.0.0.1", 8887))
         s.listen()"""
 
-        Pions = {
+        self.Pions = {
            "SLEP",
            "SDEP",
            "SLEC",
@@ -60,30 +60,62 @@ class Game:
         
         self.plateau = test['board']
         self.piece_a_jouer = test['piece']
+
+        for piece in self.plateau:
+            if piece != None:
+                self.Pions.remove(piece)
+
+        print(self.Pions)
+
+    def give_piece(self):
+        carac = {"B":0,"S":0,"L":0,"D":0,"F":0,"E":0,"P":0,"C":0}
+        for lettre in carac.keys():
+            n = 0
+            for pion in  self.plateau:
+                if pion == None:
+                    continue
+                if lettre in pion:
+                    n += 1
+            carac[lettre] = n
+
+    def place(self, vraie_position): #Donner la position sur laquelle on place le pion
+        if vraie_position != None:
+            print(vraie_position)
+        else:
+            l = 1
     
     def move(self, indices):
         pieces_placees = []
+        vraie_position = None
         for emplacement in indices:
-            pieces_placees.append(self.plateau[emplacement])
+            pieces_placees.append(self.plateau[emplacement]) #Prend les emplacements rangée par rangée
 
         for lettre in "BDECSLFP":
-            if lettre not in self.piece_a_jouer:
+            if lettre not in self.piece_a_jouer: #Identification des caractéristiques communes
                 continue
             n = 0
+            i = 0
             vide = False
             for piece in pieces_placees:
                 if piece == None:
                     vide = True
+                    position = i
                     continue
                 if lettre in piece:
                     n += 1
+                i += 1
             
-            if n == 3 and vide == True:
-                #placer la piece
+            if n == 3 and vide == True: #Placer la pièce gagnante
+                vraie_position = indices[position]
+                print(vraie_position)
                 break
+        
+            self.place(vraie_position)
+
     
     def run(self):
         for liste_indice in self.IndicesGagnants:
             self.move(liste_indice)
+        self.give_piece()
 
 Game().run()
