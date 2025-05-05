@@ -2,8 +2,8 @@
     "players": ["LUR", "FKY"],
     "current": 0,
     "board": [
-      null,
-      "BDEC",
+      "BLEP",
+      "BLEC",
       null,
       "BDFP",
       null,
@@ -15,7 +15,7 @@
       null,
       null,
       "BLFP",
-      "BLEC",
+      "BDEC",
       null,
       "SLFP"
     ],

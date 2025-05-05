@@ -33,6 +33,8 @@ class Game:
                    [0,5,10,15],[3,6,9,12]
                     ]
         
+        self.vraie_position = None
+        
         with open('test.json','r') as file:
             test = json.load(file)
 
@@ -65,8 +67,6 @@ class Game:
             if piece != None:
                 self.Pions.remove(piece)
 
-        print(self.Pions)
-
     def give_piece(self):
         carac = {"B":0,"S":0,"L":0,"D":0,"F":0,"E":0,"P":0,"C":0}
         for lettre in carac.keys():
@@ -77,6 +77,53 @@ class Game:
                 if lettre in pion:
                     n += 1
             carac[lettre] = n
+        
+        minimum_carac = min(carac.values())
+        carac_mins = {caract : nombre for caract, nombre in carac.items() if  minimum_carac == nombre}
+
+        Pions_dict = {pion : 0 for pion in self.Pions}
+
+        for lettre in carac_mins:
+            for pion in Pions_dict:
+                if lettre in pion:
+                    Pions_dict[pion] += 1
+
+        maximum_pion = max(Pions_dict, key=Pions_dict.get)
+        print(maximum_pion)
+
+    def give_piece_urgence(self, indices):
+        pieces_placees = []
+        vraie_position = None
+        for emplacement in indices:
+            pieces_placees.append(self.plateau[emplacement]) #Prend les emplacements rangée par rangée
+
+        n = 0
+        for piece in pieces_placees:
+            if piece == None:
+                n+=1
+        
+        Dico_carac = {"B":"S", "D":"L", "E":"F", "C":"P", "S":"B", "L":"D", "F":"E", "P":"C"}
+
+        if n == 1 :
+            for lettre in "BDECSLFP":
+                i = 0
+                for piece in pieces_placees:
+                    if piece == None:
+                        continue
+                    if lettre in piece:
+                        i += 1
+
+                if i == 3:
+                  antidote = Dico_carac[lettre]
+                  break
+        
+            if antidote is not None:
+                for pion in self.Pions:
+                    if antidote in pion:
+                        pion_a_donner = pion
+                        break
+            
+            print(f"antidote = {pion_a_donner}")
 
     def place(self, vraie_position): #Donner la position sur laquelle on place le pion
         if vraie_position != None:
@@ -86,6 +133,7 @@ class Game:
     
     def move(self, indices):
         pieces_placees = []
+        global vraie_position
         vraie_position = None
         for emplacement in indices:
             pieces_placees.append(self.plateau[emplacement]) #Prend les emplacements rangée par rangée
@@ -106,16 +154,21 @@ class Game:
                 i += 1
             
             if n == 3 and vide == True: #Placer la pièce gagnante
-                vraie_position = indices[position]
-                print(vraie_position)
+                self.vraie_position = indices[position]
+                self.place(self.vraie_position)
                 break
         
-            self.place(vraie_position)
 
     
     def run(self):
         for liste_indice in self.IndicesGagnants:
-            self.move(liste_indice)
+            if self.vraie_position == None:
+                self.move(liste_indice)
+
+        """if self.vraie_position == None:
+            for liste_indice in self.IndicesGagnants:
+                self.give_piece_urgence(liste_indice)"""
+
         self.give_piece()
 
 Game().run()
