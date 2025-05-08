@@ -34,6 +34,7 @@ class Game:
                     ]
         
         self.vraie_position = None
+        self.vrai_pion = False
         
         with open('test.json','r') as file:
             test = json.load(file)
@@ -89,9 +90,9 @@ class Game:
                     Pions_dict[pion] += 1
 
         maximum_pion = max(Pions_dict, key=Pions_dict.get)
-        print(maximum_pion)
+        print(f"pion stratégique classique : {maximum_pion}")
 
-    def give_piece_urgence(self, indices):
+    def give_piece_urgence(self, indices): #Si 3 alignées alors urgence de ne pas donner la mauvaise pièce
         pieces_placees = []
         vraie_position = None
         for emplacement in indices:
@@ -114,16 +115,14 @@ class Game:
                         i += 1
 
                 if i == 3:
-                  antidote = Dico_carac[lettre]
-                  break
-        
-            if antidote is not None:
-                for pion in self.Pions:
-                    if antidote in pion:
-                        pion_a_donner = pion
-                        break
-            
-            print(f"antidote = {pion_a_donner}")
+                    antidote = Dico_carac[lettre]
+                    for pion in self.Pions:
+                        if antidote in pion:
+                            pion_a_donner = pion
+                            print(f"antidote = {pion_a_donner}")
+                            self.vrai_pion = True
+                            break
+                    break  
 
     def place(self, vraie_position): #Donner la position sur laquelle on place le pion
         if vraie_position != None:
@@ -162,13 +161,17 @@ class Game:
     
     def run(self):
         for liste_indice in self.IndicesGagnants:
-            if self.vraie_position == None:
-                self.move(liste_indice)
+            """if self.vraie_position == None:
+                self.move(liste_indice)"""
 
-        """if self.vraie_position == None:
+        if self.vraie_position == None:
+            print("RIEN")
             for liste_indice in self.IndicesGagnants:
-                self.give_piece_urgence(liste_indice)"""
+                self.give_piece_urgence(liste_indice)
+                if self.vrai_pion == True:
+                    break
 
-        self.give_piece()
+        if self.vrai_pion == False:
+            self.give_piece()
 
 Game().run()

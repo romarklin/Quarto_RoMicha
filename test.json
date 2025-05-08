@@ -2,10 +2,10 @@
     "players": ["LUR", "FKY"],
     "current": 0,
     "board": [
-      "BLEP",
       "BLEC",
+      "SLEC",
       null,
-      "BDFP",
+      "BDFC",
       null,
       null,
       null,
@@ -15,9 +15,9 @@
       null,
       null,
       "BLFP",
-      "BDEC",
+      null,
       null,
       "SLFP"
     ],
-    "piece": "BLEP"
+    "piece": "SLEP"
   }
