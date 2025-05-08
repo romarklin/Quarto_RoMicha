@@ -1,13 +1,13 @@
-import math
+import random as r
 import socket
 import json
 import os
 
 class Game:
     def __init__(self):
-        """s = socket.socket()
+        s = socket.socket()
         s.bind(("127.0.0.1", 8887))
-        s.listen()"""
+        s.listen()
 
         self.Pions = {
            "SLEP",
@@ -28,6 +28,9 @@ class Game:
            "BDFC"
         }
 
+        with open('test.json','r') as file:
+            test = json.load(file)
+
         self.IndicesGagnants = [[0,1,2,3],[4,5,6,7],[8,9,10,11],[12,13,14,15],
                    [0,4,8,12],[1,5,9,13],[2,6,10,14],[3,7,11,15],
                    [0,5,10,15],[3,6,9,12]
@@ -35,16 +38,28 @@ class Game:
         
         self.vraie_position = None
         self.vrai_pion = False
-        
-        with open('test.json','r') as file:
-            test = json.load(file)
 
         pong = {
         "response": "pong"
         }
-        pong_data = json.dumps(pong)
 
-        """while True:
+        self.jeu = {
+            "pos" : None,
+            "piece" : None
+        }
+
+        pong_data = json.dumps(pong)
+        self.jeu_data = json.dumps(self.jeu)
+
+        self.plateau = test['board']
+        self.piece_a_jouer = test['piece']
+
+        for piece in self.plateau:
+            if piece != None:
+                self.Pions.remove(piece)
+        self.Pions.remove(self.piece_a_jouer)
+
+        while True:
             client, addr = s.accept()
             while True:
                 reponse = client.recv(4096).decode()
@@ -58,15 +73,9 @@ class Game:
                 
                 if message.get("request") == "play":
                     etat_du_jeu = message.get("state")
+                    self.run()
 
-            client.close()"""
-        
-        self.plateau = test['board']
-        self.piece_a_jouer = test['piece']
-
-        for piece in self.plateau:
-            if piece != None:
-                self.Pions.remove(piece)
+            client.close()
 
     def give_piece(self):
         carac = {"B":0,"S":0,"L":0,"D":0,"F":0,"E":0,"P":0,"C":0}
@@ -91,6 +100,7 @@ class Game:
 
         maximum_pion = max(Pions_dict, key=Pions_dict.get)
         print(f"pion stratégique classique : {maximum_pion}")
+        self.jeu["piece"] = maximum_pion
 
     def give_piece_urgence(self, indices): #Si 3 alignées alors urgence de ne pas donner la mauvaise pièce
         pieces_placees = []
@@ -121,19 +131,27 @@ class Game:
                             pion_a_donner = pion
                             print(f"antidote = {pion_a_donner}")
                             self.vrai_pion = True
+                            self.jeu["piece"] = pion_a_donner
                             break
                     break  
 
-    def place(self, vraie_position): #Donner la position sur laquelle on place le pion
-        if vraie_position != None:
-            print(vraie_position)
+    def place(self, position): #Donner la position sur laquelle on place le pion
+        if position != None:
+            print(f"position stratégique = {position}")
         else:
-            l = 1
+            Pos_possibles = []
+            for numero in range(len(self.plateau)):
+                if self.plateau[numero] == None:
+                    Pos_possibles.append(numero)
+            position = r.choice(Pos_possibles)
+            print(f"position random = {position}")
+
+        self.jeu["pos"] = position
     
     def move(self, indices):
         pieces_placees = []
-        global vraie_position
-        vraie_position = None
+        """global vraie_position
+        vraie_position = None"""
         for emplacement in indices:
             pieces_placees.append(self.plateau[emplacement]) #Prend les emplacements rangée par rangée
 
@@ -156,16 +174,16 @@ class Game:
                 self.vraie_position = indices[position]
                 self.place(self.vraie_position)
                 break
-        
-
     
     def run(self):
         for liste_indice in self.IndicesGagnants:
-            """if self.vraie_position == None:
-                self.move(liste_indice)"""
+            if self.vraie_position == None:
+                self.move(liste_indice)
+            
+        if self.vraie_position == None:
+            self.place(None)
 
         if self.vraie_position == None:
-            print("RIEN")
             for liste_indice in self.IndicesGagnants:
                 self.give_piece_urgence(liste_indice)
                 if self.vrai_pion == True:
@@ -174,4 +192,6 @@ class Game:
         if self.vrai_pion == False:
             self.give_piece()
 
-Game().run()
+        print(self.jeu)
+
+Game()
