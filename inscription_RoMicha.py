@@ -2,7 +2,7 @@ import socket
 import json
 
 s = socket.socket()
-s.connect(("localhost", 3000))
+s.connect(("172.17.10.133", 3000))
 
 requete = {
   "request": "subscribe",

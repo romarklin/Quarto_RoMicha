@@ -9,25 +9,6 @@ class Game:
         s.bind(("0.0.0.0", 8885))
         s.listen()
 
-        self.Pions = {
-           "SLEP",
-           "SDEP",
-           "SLEC",
-           "BDEC",
-           "SLFP",
-           "SLFC",
-           "BDFP",
-           "SDFP",
-           "SDFC",
-           "BLFP",
-           "SDEC",
-           "BLEP",
-           "BDEP",
-           "BLFC",
-           "BLEC",
-           "BDFC"
-        }
-
         """with open('test.json','r') as file:
             test = json.load(file)"""
 
@@ -68,12 +49,19 @@ class Game:
                     etat_du_jeu = message.get("state")
                     self.plateau = etat_du_jeu['board']
                     self.piece_a_jouer = etat_du_jeu['piece']
-
-                    for piece in self.plateau:
-                        if piece != None:
-                            self.Pions.remove(piece)
-                            self.Pions.remove(self.piece_a_jouer)
+                    
                     self.run()
+
+                    colis = {
+                        "response" : "move",
+                        "move" : self.jeu,
+                        "message" : "ok"
+                    }
+
+                    print(f"colis = {colis}")
+
+                    colis_data = json.dumps(colis)
+                    client.sendall(colis_data.encode('utf-8'))
 
             client.close()
 
@@ -176,8 +164,41 @@ class Game:
                 break
     
     def run(self):
+        self.Pions = {
+            "SLEP",
+            "SDEP",
+            "SLEC",
+            "BDEC",
+            "SLFP",
+            "SLFC",
+            "BDFP",
+            "SDFP",
+            "SDFC",
+            "BLFP",
+            "SDEC",
+            "BLEP",
+            "BDEP",
+            "BLFC",
+            "BLEC",
+            "BDFC"
+            }
+
+        print(self.Pions)
+
+        for piece in self.plateau:
+            if piece != None:
+                pion_trouve = next((p for p in self.Pions if sorted(p) == sorted(piece)), None)
+                if pion_trouve:
+                        self.Pions.remove(pion_trouve)
+
+        if self.piece_a_jouer != None:
+            pion_trouve = next((p for p in self.Pions if sorted(p) == sorted(self.piece_a_jouer)), None)
+            if pion_trouve:
+                self.Pions.remove(pion_trouve)
+
+    
         for liste_indice in self.IndicesGagnants:
-            if self.vraie_position == None:
+            if self.vraie_position == None and self.piece_a_jouer != None:
                 self.move(liste_indice)
             
         if self.vraie_position == None:
