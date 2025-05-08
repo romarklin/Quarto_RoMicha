@@ -6,7 +6,7 @@ import os
 class Game:
     def __init__(self):
         s = socket.socket()
-        s.bind(("127.0.0.1", 8887))
+        s.bind(("127.0.0.1", 8885))
         s.listen()
 
         self.Pions = {

@@ -2,12 +2,12 @@ import socket
 import json
 
 s = socket.socket()
-s.connect(("172.17.10.133", 3000))
+s.connect(("localhost", 3000))
 
 requete = {
   "request": "subscribe",
-  "port": 8887,
-  "name": "LOL",
+  "port": 8885,
+  "name": "RoMicha",
   "matricules": ["23082", "23138"]
 }
 
