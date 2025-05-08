@@ -6,7 +6,7 @@ import os
 class Game:
     def __init__(self):
         s = socket.socket()
-        s.bind(("127.0.0.1", 8885))
+        s.bind(("0.0.0.0", 8885))
         s.listen()
 
         self.Pions = {
@@ -28,8 +28,8 @@ class Game:
            "BDFC"
         }
 
-        with open('test.json','r') as file:
-            test = json.load(file)
+        """with open('test.json','r') as file:
+            test = json.load(file)"""
 
         self.IndicesGagnants = [[0,1,2,3],[4,5,6,7],[8,9,10,11],[12,13,14,15],
                    [0,4,8,12],[1,5,9,13],[2,6,10,14],[3,7,11,15],
@@ -51,13 +51,6 @@ class Game:
         pong_data = json.dumps(pong)
         self.jeu_data = json.dumps(self.jeu)
 
-        self.plateau = test['board']
-        self.piece_a_jouer = test['piece']
-
-        for piece in self.plateau:
-            if piece != None:
-                self.Pions.remove(piece)
-        self.Pions.remove(self.piece_a_jouer)
 
         while True:
             client, addr = s.accept()
@@ -73,6 +66,13 @@ class Game:
                 
                 if message.get("request") == "play":
                     etat_du_jeu = message.get("state")
+                    self.plateau = etat_du_jeu['board']
+                    self.piece_a_jouer = etat_du_jeu['piece']
+
+                    for piece in self.plateau:
+                        if piece != None:
+                            self.Pions.remove(piece)
+                            self.Pions.remove(self.piece_a_jouer)
                     self.run()
 
             client.close()

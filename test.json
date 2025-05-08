@@ -2,8 +2,6 @@
     "players": ["LUR", "FKY"],
     "current": 0,
     "board": [
-      "SLEC",
-      "SLFC",
       null,
       null,
       null,
@@ -14,10 +12,12 @@
       null,
       null,
       null,
-      "BLFP",
-      "BDEC",
       null,
-      "SLFP"
+      null,
+      null,
+      null,
+      null,
+      null
     ],
     "piece": "SLEP"
   }
