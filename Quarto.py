@@ -12,7 +12,7 @@ class Game:
         """with open('test.json','r') as file:
             test = json.load(file)"""
 
-        self.IndicesGagnants = [[0,1,2,3],[4,5,6,7],[8,9,10,11],[12,13,14,15],
+        self.IndicesGagnants = [[0,1,2,3],[4,5,6,7],[8,9,10,11],[12,13,14,15],      #Donne les indices des cases gagnantes
                    [0,4,8,12],[1,5,9,13],[2,6,10,14],[3,7,11,15],
                    [0,5,10,15],[3,6,9,12]
                     ]
@@ -32,20 +32,19 @@ class Game:
         pong_data = json.dumps(pong)
         self.jeu_data = json.dumps(self.jeu)
 
-
         while True:
-            client, addr = s.accept()
-            while True:
+            client, addr = s.accept()           # Accepter la connexion
+            while True:                     # Boucle de jeu pour le serveur
                 reponse = client.recv(4096).decode()
                 if not reponse:
                     break
 
                 message = json.loads(reponse)
 
-                if message.get("request") == "ping":
+                if message.get("request") == "ping":  
                     client.sendall(pong_data.encode('utf-8'))
                 
-                if message.get("request") == "play":
+                if message.get("request") == "play":    #envoie le message contenant le plateau et la pièce à jouer
                     etat_du_jeu = message.get("state")
                     self.plateau = etat_du_jeu['board']
                     self.piece_a_jouer = etat_du_jeu['piece']
@@ -65,7 +64,7 @@ class Game:
 
             client.close()
 
-    def give_piece(self):
+    def give_piece(self):   #Donne la pièce avec caractéristiques les moins présentes sur le plateau
         carac = {"B":0,"S":0,"L":0,"D":0,"F":0,"E":0,"P":0,"C":0}
         for lettre in carac.keys():
             n = 0
@@ -163,7 +162,7 @@ class Game:
                 self.place(self.vraie_position)
                 break
     
-    def run(self):
+    def run(self):      #Lance le jeu
         self.Pions = {
             "SLEP",
             "SDEP",
@@ -185,26 +184,26 @@ class Game:
 
         print(self.Pions)
 
-        for piece in self.plateau:
+        for piece in self.plateau: #On enlève les pièces déjà placées
             if piece != None:
                 pion_trouve = next((p for p in self.Pions if sorted(p) == sorted(piece)), None)
                 if pion_trouve:
                         self.Pions.remove(pion_trouve)
 
-        if self.piece_a_jouer != None:
+        if self.piece_a_jouer != None: #On enlève la pièce à jouer
             pion_trouve = next((p for p in self.Pions if sorted(p) == sorted(self.piece_a_jouer)), None)
             if pion_trouve:
                 self.Pions.remove(pion_trouve)
 
     
-        for liste_indice in self.IndicesGagnants:
+        for liste_indice in self.IndicesGagnants:  #On parcourt les indices gagnants
             if self.vraie_position == None and self.piece_a_jouer != None:
                 self.move(liste_indice)
             
-        if self.vraie_position == None:
+        if self.vraie_position == None:  
             self.place(None)
 
-        if self.vraie_position == None:
+        if self.vraie_position == None:     #Donne pièce de "contrage"
             for liste_indice in self.IndicesGagnants:
                 self.give_piece_urgence(liste_indice)
                 if self.vrai_pion == True:
