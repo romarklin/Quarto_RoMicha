@@ -6,7 +6,7 @@ import os
 class Game:
     def __init__(self):
         s = socket.socket()
-        s.bind(("0.0.0.0", 8885))
+        s.bind(("0.0.0.0", 8888))
         s.listen()
 
         """with open('test.json','r') as file:
@@ -29,7 +29,7 @@ class Game:
         pong_data = json.dumps(pong)
         self.jeu_data = json.dumps(self.jeu)
 
-        while True:
+        """while True:
             client, addr = s.accept()           # Accepter la connexion
             while True:                     # Boucle de jeu pour le serveur
                 reponse = client.recv(4096).decode()
@@ -63,7 +63,7 @@ class Game:
                     colis_data = json.dumps(colis)
                     client.sendall(colis_data.encode('utf-8'))
 
-            client.close()
+            client.close()"""
 
     def give_piece(self):   #Donne la pièce avec caractéristiques les moins présentes sur le plateau
         carac = {"B":0,"S":0,"L":0,"D":0,"F":0,"E":0,"P":0,"C":0}
@@ -213,6 +213,5 @@ class Game:
         if self.vrai_pion == False:
             self.give_piece()
 
-        print(self.jeu)
 
 Game()

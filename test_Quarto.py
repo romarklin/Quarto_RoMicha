@@ -13,24 +13,27 @@ class TestGame(unittest.TestCase):
             "BDEP", "BLFC", "BLEC", "BDFC"
         }
 
-    def test_run_with_empty_board(self):
-        """Test the run method with an empty board."""
-        self.game.plateau = [None] * 16
+    #@unittest.timeout(5) # Timeout pour etviter boucle infinie
+
+    def test_run_with_empty_board(self): #Test et lance la méthode run avec un plateau vide
+       
+        self.game.plateau = [None, None, None, None, None, None, None, None,
+                            None, None, None, None, None, None, None, None] 
         self.game.piece_a_jouer = "SLEP"
         self.game.run()
         self.assertIsNotNone(self.game.jeu["pos"], "Position should be set.")
         self.assertIn(self.game.jeu["piece"], self.game.Pions, "Piece should be valid.")
 
-    def test_run_with_almost_winning_board(self):
-        """Test the run method with a nearly winning board."""
+    def test_run_with_almost_winning_board(self): # Test et lance la méthode run avec un plateau presque gagnant
+        
         self.game.plateau = ["SLEP", "SDEP", "SLEC", None] + [None] * 12
         self.game.piece_a_jouer = "BDEC"
         self.game.run()
         self.assertEqual(self.game.jeu["pos"], 3, "Should place the piece in the winning position.")
         self.assertIn(self.game.jeu["piece"], self.game.Pions, "Piece should be valid.")
 
-    def test_run_with_no_piece_to_play(self):
-        """Test the run method when no piece is provided."""
+    def test_run_with_no_piece_to_play(self): # Test et lance méthode run sans pièce à jouer
+        
         self.game.plateau = [None] * 16
         self.game.piece_a_jouer = None
         self.game.run()
