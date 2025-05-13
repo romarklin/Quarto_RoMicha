@@ -17,9 +17,6 @@ class Game:
                    [0,5,10,15],[3,6,9,12]
                     ]
         
-        self.vraie_position = None
-        self.vrai_pion = False
-
         pong = {
         "response": "pong"
         }
@@ -48,6 +45,10 @@ class Game:
                     etat_du_jeu = message.get("state")
                     self.plateau = etat_du_jeu['board']
                     self.piece_a_jouer = etat_du_jeu['piece']
+                    print(message.get("errors"))
+
+                    self.vraie_position = None
+                    self.vrai_pion = False
                     
                     self.run()
 
@@ -57,7 +58,7 @@ class Game:
                         "message" : "ok"
                     }
 
-                    print(f"colis = {colis}")
+                    #print(f"colis = {colis}")
 
                     colis_data = json.dumps(colis)
                     client.sendall(colis_data.encode('utf-8'))
@@ -86,7 +87,7 @@ class Game:
                     Pions_dict[pion] += 1
 
         maximum_pion = max(Pions_dict, key=Pions_dict.get)
-        print(f"pion stratégique classique : {maximum_pion}")
+        #print(f"pion stratégique classique : {maximum_pion}")
         self.jeu["piece"] = maximum_pion
 
     def give_piece_urgence(self, indices): #Si 3 alignées alors urgence de ne pas donner la mauvaise pièce
