@@ -5,7 +5,7 @@ import json
 class Game:
     def __init__(self):
         s = socket.socket()
-        s.bind(("0.0.0.0", 8885))
+        s.bind(("0.0.0.0", 7778))
         s.listen()
 
         self.IndicesGagnants = [[0,1,2,3],[4,5,6,7],[8,9,10,11],[12,13,14,15], #Donne les indices des cases gagnantes
@@ -52,7 +52,7 @@ class Game:
                     colis = {
                         "response" : "move",
                         "move" : self.jeu,
-                        "message" : "oui"
+                        "message" : "Huile de coude 100%"
                     }
 
                     colis_data = json.dumps(colis)

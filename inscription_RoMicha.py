@@ -6,9 +6,9 @@ s.connect(("localhost", 3000))
 
 requete = {
   "request": "subscribe",
-  "port": 8885,
-  "name": "MDR",
-  "matricules": ["23023", "22134"]
+  "port": 7778,
+  "name": "Gustav The Railway Gun",
+  "matricules": ["23082", "23138"]
 }
 
 requete_data = json.dumps(requete)
